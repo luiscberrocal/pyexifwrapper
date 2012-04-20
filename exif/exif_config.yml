@@ -1,0 +1,3 @@
+exif:
+    application: /usr/bin/exiftool
+    charset: Latin
