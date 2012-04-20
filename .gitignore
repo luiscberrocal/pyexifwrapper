@@ -1,6 +1,7 @@
 *.py[co]
 
 # Packages
+.DS_Store
 *.egg
 *.egg-info
 dist

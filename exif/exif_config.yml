@@ -1,3 +1,5 @@
 exif:
     application: /usr/bin/exiftool
-    charset: Latin
+    charset: utf-8
+    shell: False
+    
