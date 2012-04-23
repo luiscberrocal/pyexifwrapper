@@ -2,4 +2,7 @@ exif:
     application: /usr/bin/exiftool
     charset: utf-8
     shell: False
+standards:
+    - exif:
+        pattern: '^\[EXIF\]\s*([\w\s-]*):\s(.*)'
     
