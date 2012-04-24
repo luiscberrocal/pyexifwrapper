@@ -15,7 +15,7 @@ class tests_file_functions(unittest.TestCase):
 		pass
 	def testFileCount(self):
 		dir =r'/Users/luiscberrocal/Documents/Magic Briefcase'
-		dir = r'/Users/luiscberrocal/Documents/Magic Briefcase/Sample Documents'
+		dir = r'/Users/luiscberrocal/Documents/Seminario_Docencia_Superior'
 		c = filecount(dir)
 		print "%s (%d files)" % (dir, c)
     

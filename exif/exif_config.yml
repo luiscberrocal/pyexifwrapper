@@ -3,6 +3,17 @@ exif:
     charset: utf-8
     shell: False
 standards:
-    - exif:
+    - 
+        name: exif
         pattern: '^\[EXIF\]\s*([\w\s-]*):\s(.*)'
+    - 
+        name: iptc
+        pattern: '^\[IPTC\]\s*([\w\s-]*):\s(.*)'
+    - 
+        name: xmp
+        pattern: '^\[XMP\]\s*([\w\s-]*):\s(.*)'
+    - 
+        name: pdf
+        pattern: '^\[pdf\]\s*([\w\s-]*):\s(.*)'
+    
     

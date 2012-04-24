@@ -41,17 +41,24 @@ class ExifTool():
 					 "By-line" : "xmp:Creator",
 					 "Credit" : "xmp:Credit"
 					 }
-					
+	def __loadConfig(self):
+		config_path = os.path.split(__file__)[0]
+		f = open(config_path + os.sep + 'exif_config.yml')
+		self.config = yaml.load(f)
+		f.close()
+		#print self.config
+		#self.pattern_exif = re.compile(self.config['standards'][0]['exif']['pattern'])
+		self.standards = {}
+		for standard in self.config['standards']:
+			print standard["name"]
+			self.standards[standard["name"]] = re.compile(standard["pattern"])
+		#print "=== %s" % self.pattern_exif				
 	def __init__(self, filename, verbose = False):
 		self.__verbose = verbose
 		if not os.path.exists(filename):
 			raise Exception("File %s does not exist" % (filename))
 		self.filename = filename
-		config_path = os.path.split(__file__)[0]
-		f = open(config_path + os.sep + 'exif_config.yml')
-		self.config = yaml.load(f)
-		f.close()
-		print self.config
+		self.__loadConfig()
 		self.__load(filename)
 	
 	def __load(self, filename):

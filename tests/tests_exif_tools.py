@@ -18,8 +18,13 @@ class tests_exif_tools(unittest.TestCase):
 	def testPrettyPrint(self):
 		fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
 		#fn = r'/Users/luiscberrocal/Documents/Luis Alberto La Batalla Final.mov'
-		extool = ExifTool(fn, True)
+		extool = ExifTool(fn, False)
 		extool.prettyPrint()
+	def testConfig(self):
+		fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
+		#fn = r'/Users/luiscberrocal/Documents/Luis Alberto La Batalla Final.mov'
+		extool = ExifTool(fn, False)
+		#print extool.config
     
 if __name__ == '__main__':
 	unittest.main()
