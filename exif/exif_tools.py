@@ -62,13 +62,10 @@ class ExifTool():
 		self.__load(filename)
 	
 	def __load(self, filename):
-		#self.iptc = {}
-		#self.xmp = {}
-		#self.pdf = {}
-		#self.exif = {}
 		self.standard_values = {}
 		for standard, pattern in self.standards.iteritems():
 			self.standard_values[standard]={}
+			
 		p = subprocess.Popen( (self.config["exif"]["application"], '-G', '-charset', self.config["exif"]["charset"], filename), shell=self.config["exif"]["shell"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 		for line in p.stdout.readlines():
 			#print line.decode("utf-8").rstrip('\n')
@@ -78,26 +75,6 @@ class ExifTool():
 				if match:
 					self.standard_values[standard][match.group(1).replace(" ", "")] =  match.group(2)
 					break
-			""""		
-			m_iptc = self.pattern_iptc.match(line.decode("utf-8").rstrip('\n'))
-			m_xmp = self.pattern_xmp.match(line.decode("utf-8").rstrip('\n'))
-			m_pdf = self.pattern_pdf.match(line.decode("utf-8").rstrip('\n'))
-			m_exif = self.pattern_exif.match(line.decode("utf-8").rstrip('\n'))
-			if m_iptc:
-				self.iptc[m_iptc.group(1).replace(" ", "")] =  m_iptc.group(2)
-				#print "IPTC %s = %s" % (m_iptc.group(1), m_iptc.group(2))
-			elif m_xmp:
-				self.xmp[m_xmp.group(1).replace(" ", "")] = m_xmp.group(2)
-				#print "XMP	 %s = %s" % (m_xmp.group(1), m_xmp.group(2))
-			elif m_pdf:
-				self.pdf[m_pdf.group(1).replace(" ", "")] = m_pdf.group(2)
-				#print "XMP	 %s = %s" % (m_xmp.group(1), m_xmp.group(2))
-			elif m_exif:
-				self.exif[m_exif.group(1).replace(" ", "")] = m_exif.group(2)
-				#print "XMP	 %s = %s" % (m_xmp.group(1), m_xmp.group(2))
-			else:
-				if self.__verbose:
-					print "**" + line.decode("utf-8").rstrip('\n')"""
 		retval = p.wait()
 	
 	def prettyPrint(self):
@@ -105,15 +82,7 @@ class ExifTool():
 			for tag, val in values.iteritems():
 				print "%s %s %s" % (standard, tag, val)
 		#print "Len iptc %d" % len(self.iptc)
-		""""
-		for key, v in self.iptc.iteritems():
-			print "IPTC %s : %s" % (key, v)
-		for key, v in self.xmp.iteritems():
-			print "XMP %s : %s" % (key, v)
-		for key, v in self.pdf.iteritems():
-			print "PDF %s : %s" % (key, v)
-		for key, v in self.exif.iteritems():
-			print "EXIF %s : %s" % (key, v)"""
+	
 	def addToAttribute(self, standard, key, value):
 		values ={}
 		values[key] = value
