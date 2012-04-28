@@ -21,6 +21,7 @@ class UnsupportedStandardException(Exception):
 	pass
 
 class ExifTool():
+	
 	#EXIT_TOOL = os.path.join(r"C:\Temp\python\iptcconvert\libs", "exiftool.exe")
 	#pattern_iptc = re.compile(r'^\[IPTC\]\s*([\w\s-]*):\s(.*)')
 	#pattern_xmp = re.compile(r'^\[XMP\]\s*([\w\s-]*):\s(.*)')
@@ -30,19 +31,19 @@ class ExifTool():
 	XMP = 1
 	PDF = 2
 	__iptc_to_pdf = {"Headline" : "Subject",
-					 "Keywords" : "Keywords",
-					 "Writer-Editor" : "Author",
-					 "Caption-Abstract" : "Title",
-					 "DateCreated" : "xmp:Event",
-					 "ProgramVersion" : None,
-					 "OriginatingProgram" : None,
-					 "ApplicationRecordVersion" : None,
-					  "CopyrightNotice" :"xmp:Copyright",
-					  "Source" : "xmp:Source",
-					 "SpecialInstructions" : "xmp:Instructions",
-					 "By-line" : "xmp:Creator",
-					 "Credit" : "xmp:Credit"
-					 }
+	                "Keywords" : "Keywords",
+	                "Writer-Editor" : "Author",
+	                "Caption-Abstract" : "Title",
+	                "DateCreated" : "xmp:Event",
+	                "ProgramVersion" : None,
+	                "OriginatingProgram" : None,
+	                "ApplicationRecordVersion" : None,
+	                "CopyrightNotice" :"xmp:Copyright",
+	                "Source" : "xmp:Source",
+	                "SpecialInstructions" : "xmp:Instructions",
+	                "By-line" : "xmp:Creator",
+	                "Credit" : "xmp:Credit"
+	                }
 	def __loadConfig(self):
 		config_path = os.path.split(__file__)[0]
 		f = open(config_path + os.sep + 'exif_config.yml')
@@ -79,10 +80,15 @@ class ExifTool():
 					break
 		retval = p.wait()
 	
-	def prettyPrint(self):
+	def prettyPrint(self,*standards_to_print):
 		for standard, values in self.standard_values.iteritems():
-			for tag, val in values.iteritems():
-				print "%s %s %s" % (standard, tag, val)
+			if standards_to_print:
+				if standard in standards_to_print:
+					for tag, val in values.iteritems():
+						print "%s %s %s" % (standard, tag, val)
+			else:
+				for tag, val in values.iteritems():
+					print "%s %s %s" % (standard, tag, val)
 		#print "Len iptc %d" % len(self.iptc)
 	
 	def addToAttribute(self, standard, key, value):
@@ -97,11 +103,7 @@ class ExifTool():
 		else:
 			raise Exception("Invalid standard")
 	def setAttribute(self, standard, key, value):
-		if standard == self.IPTC:
-			key = "-iptc:%s='%s'" % (key, value)
-			p = subprocess.Popen( (self.EXIT_TOOL, key, '-charset', 'Latin', self.filename), shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-			for line in p.stdout.readlines():
-				print line
+		pass
 	def __buildKey(self, standardName, tag, value):
 		key = None
 		if tag.find(":") == -1:
@@ -148,13 +150,23 @@ class ExifTool():
 		if lc > 2:
 			raise Exception("More than one line on out for exittool for %s" % (self.filename))
 		self.__load(self.filename)
-	def setAttributes(self, standardName, values ={}):
+	#----------------------------------------------------------------------
+	def __isStandardNameValid(self, standardName):
+		""""""
 		valid_standard = False
 		for st_name in self.config["standards"]:
 			if st_name["name"] == standardName:
 				valid_standard = True
 				break
-		if valid_standard:
+		return valid_standard
+	#----------------------------------------------------------------------
+	def getAttribute(self, tag_name, standard_name = None):
+		""""""
+		
+		
+	def setAttributes(self, standardName, values ={}):
+		
+		if self.__isStandardNameValid(standardName):
 			self.__setAtt(standardName, values)
 		else:
 			raise UnsupportedStandardException("%s is not a valid Standard Name" % (standardName))
@@ -185,6 +197,14 @@ class ExifTool():
 			raise NoIPTCToTransferException("File %s has no valid IPTC tags to transfer" % filename)
 			#print "NO IPTC to transfer"
 
+
+class StandardTag():
+	#----------------------------------------------------------------------
+	def __init__(self, name, standard_name = None):
+		""""""
+		
+		
+	
 if __name__ == '__main__':
 	main()
 
