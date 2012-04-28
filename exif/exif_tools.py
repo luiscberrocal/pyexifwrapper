@@ -17,6 +17,8 @@ class InvalidValueException(Exception):
 	pass
 class NoIPTCToTransferException(Exception):
 	pass
+class UnsupportedStandardException(Exception):
+	pass
 
 class ExifTool():
 	#EXIT_TOOL = os.path.join(r"C:\Temp\python\iptcconvert\libs", "exiftool.exe")
@@ -65,8 +67,8 @@ class ExifTool():
 		self.standard_values = {}
 		for standard, pattern in self.standards.iteritems():
 			self.standard_values[standard]={}
-			
-		p = subprocess.Popen( (self.config["exif"]["application"], '-G', '-charset', self.config["exif"]["charset"], filename), shell=self.config["exif"]["shell"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+		command =	[self.config["exif"]["application"], '-G', '-charset', self.config["exif"]["charset"], filename]
+		p = subprocess.Popen(command , shell=self.config["exif"]["shell"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 		for line in p.stdout.readlines():
 			#print line.decode("utf-8").rstrip('\n')
 			for standard, pattern in self.standards.iteritems():
@@ -113,7 +115,7 @@ class ExifTool():
 	def __setAtt(self, standardName, values, listAction ="replace"):
 		invalid_tag_pattern = re.compile('Warning:\sTag\s\'(.*)\'\sdoes\snot\sexist')
 		invalid_value_pattern = re.compile('Warning:\sInvalid\s(.*)')
-		keycommand = [self.EXIT_TOOL]
+		keycommand = [self.config["exif"]["application"]]
 		
 		for k, v in values.iteritems():
 			if type(v) is list:
@@ -128,10 +130,10 @@ class ExifTool():
 				#"-%s:%s='%s'" % (standardName.lower(), k, v)
 				keycommand.append(key)
 		keycommand.append('-charset')
-		keycommand.append('Latin')
+		keycommand.append(self.config["exif"]["charset"])
 		keycommand.append(self.filename)
 		#print keycommand
-		p = subprocess.Popen( keycommand, shell=True, stdout=subprocess.PIPE, \
+		p = subprocess.Popen( keycommand, shell=self.config["exif"]["shell"], stdout=subprocess.PIPE, \
 							  stderr=subprocess.STDOUT)
 		lc = 1
 		for line in p.stdout.readlines():
@@ -146,15 +148,18 @@ class ExifTool():
 		if lc > 2:
 			raise Exception("More than one line on out for exittool for %s" % (self.filename))
 		self.__load(self.filename)
-	def setAttributes(self, standard, values ={}):
-		if standard == self.IPTC:
-			self.__setAtt("IPTC", values)
-		elif standard == self.XMP:
-			self.__setAtt("XMP", values)
-		elif standard == self.PDF:
-			self.__setAtt("PDF", values)
+	def setAttributes(self, standardName, values ={}):
+		valid_standard = False
+		for st_name in self.config["standards"]:
+			if st_name["name"] == standardName:
+				valid_standard = True
+				break
+		if valid_standard:
+			self.__setAtt(standardName, values)
 		else:
-			raise Exception("Invalid standard")
+			raise UnsupportedStandardException("%s is not a valid Standard Name" % (standardName))
+		
+		
 	def addIPTCFrom(self, filename):
 		jpgiptc = ExifTool(filename)
 		changes = {}
