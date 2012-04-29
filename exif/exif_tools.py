@@ -85,10 +85,10 @@ class ExifTool():
 			if standards_to_print:
 				if standard in standards_to_print:
 					for tag, val in values.iteritems():
-						print "%s %s %s" % (standard, tag, val)
+						print "%s:%s=%s" % (standard, tag, val)
 			else:
 				for tag, val in values.iteritems():
-					print "%s %s %s" % (standard, tag, val)
+					print "%s:%s=%s" % (standard, tag, val)
 		#print "Len iptc %d" % len(self.iptc)
 	
 	def addToAttribute(self, standard, key, value):
@@ -107,10 +107,10 @@ class ExifTool():
 	def __buildKey(self, standardName, tag, value):
 		key = None
 		if tag.find(":") == -1:
-			key =  "-%s:%s='%s'" % (standardName.lower(), tag, value.rstrip('\n\r'))
+			key =  '-%s:%s=%s' % (standardName.lower(), tag, value.rstrip('\n\r'))
 		else:
 			standard, tagname = tag.split(":")
-			key =  "-%s:%s='%s'" % (standard.lower(), tagname, value.rstrip('\n\r'))
+			key =  '-%s:%s=%s' % (standard.lower(), tagname, value.rstrip('\n\r'))
 		#print "Key : " +  key
 		return key
 	
@@ -153,16 +153,15 @@ class ExifTool():
 	#----------------------------------------------------------------------
 	def __isStandardNameValid(self, standardName):
 		""""""
-		valid_standard = False
-		for st_name in self.config["standards"]:
-			if st_name["name"] == standardName:
-				valid_standard = True
-				break
-		return valid_standard
+		return StandardTag.isStandardNameValid(standardName)
 	#----------------------------------------------------------------------
 	def getAttribute(self, tag_name, standard_name = None):
 		""""""
-		
+		tag = StandardTag(tag_name, standard_name)
+		tatt = None
+		if tag.standard_name in self.standard_values:
+			tatt= self.standard_values[tag.standard_name][tag.name]
+		return tatt
 		
 	def setAttributes(self, standardName, values ={}):
 		
@@ -199,10 +198,67 @@ class ExifTool():
 
 
 class StandardTag():
+	config = {}
+	standards = {}
 	#----------------------------------------------------------------------
 	def __init__(self, name, standard_name = None):
+		if standard_name is None:
+			if name.find(":") ==-1:
+				raise UnsupportedStandardException("Standard must be defined either on tagname or explicitly")
+			else:
+				st, rname = name.split(":")
+				if StandardTag.isStandardNameValid(st):
+					self.standard_name = st
+					self.name = rname
+				else:
+					raise UnsupportedStandardException("%s is not a valid standard" % st)
+		else:
+			if StandardTag.isStandardNameValid(standard_name):
+				self.standard_name = standard_name
+				self.name = name
+			else:
+				raise UnsupportedStandardException("%s is not a valid standard" % standard_name)
+	#----------------------------------------------------------------------
+	def getCommandKey(self,value,action="replace"):
 		""""""
-		
+		if action == "replace":
+			if value is None:
+				return "-%s=" % str(self) 
+			else:
+				return "-%s='%s'" % (str(self), value.rstrip('\r\n'))
+		elif action == "add":
+			if value is None:
+				raise InvalidValueException("Value of tag %s cannot be None while action is adding" % (str(self)))
+			else:
+				return "-%s+='%s'" % (str(self), value.rstrip('\r\n'))			
+		else:
+			raise InvalidValueException("%s is not a valid action" % action)
+	#----------------------------------------------------------------------
+	def __str__(self):
+		""""""
+		return self.standard_name +":" + self.name
+	@staticmethod
+	def __loadConfig():
+		config_path = os.path.split(__file__)[0]
+		f = open(config_path + os.sep + 'exif_config.yml')
+		StandardTag.config = yaml.load(f)
+		f.close()
+		StandardTag.standards = {}
+		for standard in StandardTag.config['standards']:
+			#print standard["name"]
+			StandardTag.standards[standard["name"]] = re.compile(standard["pattern"])	
+	@staticmethod
+	def isStandardNameValid(standardName):
+		""""""
+		if len(StandardTag.config) == 0:
+			#print "Loading ...."
+			StandardTag.__loadConfig()
+		valid_standard = False
+		for st_name in StandardTag.config["standards"]:
+			if st_name["name"] == standardName:
+				valid_standard = True
+				break
+		return valid_standard	
 		
 	
 if __name__ == '__main__':

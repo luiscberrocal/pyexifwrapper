@@ -45,11 +45,23 @@ class tests_exif_tools(unittest.TestCase):
 		fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
 		nfn = createCopy(fn)
 		extool = ExifTool(nfn, False)
-		title = "XMP Title set on %s" % (datetime.datetime.now().strftime("%Y%m%d_%H%M%S"))
+		title = u"XMP Title set on %s" % (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 		print nfn
 		print "-" * len(nfn)
 		extool.setAttributes("xmp",{"Title": title})
 		extool.prettyPrint("xmp")
+		#print extool.getAttribute("xmp:Title")
+		self.assertEquals(title, extool.getAttribute("xmp:Title"))
+		
+	def test_GetAttributes(self):
+		method_name = sys._getframe(0).f_code.co_name
+		print "**** %s ****" % method_name		
+		fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
+		extool = ExifTool(fn, False)
+		make = extool.getAttribute("exif:Make")
+		self.assertEquals(make, "Canon")
+		flash = extool.getAttribute("Flash", "exif")
+		self.assertEquals(flash,"No Flash")
     
 if __name__ == '__main__':
 	unittest.main()
