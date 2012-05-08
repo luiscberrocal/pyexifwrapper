@@ -40,6 +40,11 @@ class FilenameHelper:
         def sha1Checksum(filePath):
             return FilenameHelper.__checksum(filePath,'sha1')
         @staticmethod
+        def changeExtension(fullpath, extension):
+            path, fn = os.path.split(fullpath)
+            basename = os.path.splitext(fn)[0]
+            return os.path.join(path, basename + extension)
+        @staticmethod
         def size(filename, output_unit = None):
                 units = [("KB", 1.0), ("MB", 2.0) , ("GB", 3.0), ("TB", 4.0)]
                 s = os.path.getsize(filename)

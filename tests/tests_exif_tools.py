@@ -24,13 +24,14 @@ def createCopy(fn, outputPath = None):
 
 class tests_exif_tools(unittest.TestCase):
 	def setUp(self):
-		self.fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
+		#self.fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
+		self.fn =r'C:\Temp\python\iptcconvert\output\2006-05-19-035-NAY-143.jpg'
 	def testPrettyPrint(self):
 		method_name = sys._getframe(0).f_code.co_name
 		print "**** %s ****" % method_name
 		
 		#fn = r'/Users/luiscberrocal/Documents/Luis Alberto La Batalla Final.mov'
-		extool = ExifTool(fn, False)
+		extool = ExifTool(self.fn, False)
 		extool.prettyPrint()
 	def testConfig(self):
 		method_name = sys._getframe(0).f_code.co_name
