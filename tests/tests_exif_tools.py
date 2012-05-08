@@ -24,26 +24,25 @@ def createCopy(fn, outputPath = None):
 
 class tests_exif_tools(unittest.TestCase):
 	def setUp(self):
-		pass
+		self.fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
 	def testPrettyPrint(self):
 		method_name = sys._getframe(0).f_code.co_name
 		print "**** %s ****" % method_name
-		fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
+		
 		#fn = r'/Users/luiscberrocal/Documents/Luis Alberto La Batalla Final.mov'
 		extool = ExifTool(fn, False)
 		extool.prettyPrint()
 	def testConfig(self):
 		method_name = sys._getframe(0).f_code.co_name
-		print "**** %s ****" % method_name
-		fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
+		print "**** %s ****" % method_name		
 		#fn = r'/Users/luiscberrocal/Documents/Luis Alberto La Batalla Final.mov'
-		extool = ExifTool(fn, False)
+		extool = ExifTool(self.fn, False)
 		print extool.config
 	def testSetAttributes(self):
 		method_name = sys._getframe(0).f_code.co_name
 		print "**** %s ****" % method_name		
-		fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
-		nfn = createCopy(fn)
+		#fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
+		nfn = createCopy(self.fn)
 		extool = ExifTool(nfn, False)
 		title = u"XMP Title set on %s" % (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 		print nfn
@@ -56,8 +55,8 @@ class tests_exif_tools(unittest.TestCase):
 	def test_GetAttributes(self):
 		method_name = sys._getframe(0).f_code.co_name
 		print "**** %s ****" % method_name		
-		fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
-		extool = ExifTool(fn, False)
+		#fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
+		extool = ExifTool(self.fn, False)
 		make = extool.getAttribute("exif:Make")
 		self.assertEquals(make, "Canon")
 		flash = extool.getAttribute("Flash", "exif")
