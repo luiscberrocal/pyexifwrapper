@@ -17,3 +17,7 @@ def loadYamlConfig(src_filename, config_filename = None):
     cfg = yaml.load(cfg_file)
     cfg_file.close()
     return cfg
+
+def isWindows():
+    import platform
+    return platform.system() == 'Windows'

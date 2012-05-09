@@ -60,11 +60,12 @@ class ExifTool():
 		#print "=== %s" % self.pattern_exif				
 	def __init__(self, filename, verbose = False):
 		self.__verbose = verbose
-		if not os.path.exists(filename):
-			raise Exception("File %s does not exist" % (filename))
 		self.filename = filename
+		if not os.path.exists(self.filename):
+			raise Exception("File %s does not exist" % (filename))
+		
 		self.__loadConfig()
-		self.__load(filename)
+		self.__load(self.filename)
 	
 	def __load(self, filename):
 		self.standard_values = {}

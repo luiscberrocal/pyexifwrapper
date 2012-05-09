@@ -13,6 +13,7 @@ from exif.exif_tools import *
 import sys, shutil, os
 
 from files.filename_helpers import FilenameHelper
+from utils.utils_functions import isWindows
 
 def createCopy(fn, outputPath = None):
 	new_fn = FilenameHelper.addDateToFilename(fn)
@@ -20,12 +21,15 @@ def createCopy(fn, outputPath = None):
 		filename = os.path.split(new_fn)[1]
 		new_fn = os.path.join(outputPath, filename)
 	shutil.copy2(fn, new_fn)
+	if not os.path.exists(new_fn):
+		raise IOError("Could not copy file %s to %s" %( fn, new_fn))	
 	return new_fn
 
 class tests_exif_tools(unittest.TestCase):
 	def setUp(self):
 		#self.fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
-		self.fn =r'C:\Temp\python\iptcconvert\output\2006-05-19-035-NAY-143.jpg'
+		#self.fn =r'C:\Temp\python\iptcconvert\output\2006-05-19-035-NAY-143.jpg'
+		self.fn = ur'C:\Temp\python\2005-08-30-018-ADEG-199.jpg'
 	def testPrettyPrint(self):
 		method_name = sys._getframe(0).f_code.co_name
 		print "**** %s ****" % method_name
@@ -59,9 +63,14 @@ class tests_exif_tools(unittest.TestCase):
 		#fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
 		extool = ExifTool(self.fn, False)
 		make = extool.getAttribute("exif:Make")
-		self.assertEquals(make, "Canon")
+		self.assertEquals(make, "NIKON CORPORATION")
 		flash = extool.getAttribute("Flash", "exif")
-		self.assertEquals(flash,"No Flash")
+		self.assertEquals(flash,"Auto, Fired, Return detected")
+	def test_checkForDates(self):
+		method_name = sys._getframe(0).f_code.co_name
+		print "**** %s ****" % method_name
+		fn = ur'V:\secure_dam\Fotografías\Ampliación_del_Canal\Período_de_ejecución\1\2007-01-19-005-NAY-024.jpg'
+		extool = ExifTool(fn, True)
     
 if __name__ == '__main__':
 	unittest.main()
