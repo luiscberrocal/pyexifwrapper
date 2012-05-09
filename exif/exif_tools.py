@@ -11,6 +11,8 @@ Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 
 import os, subprocess, re, datetime, yaml
 from platform import system
+from utils.utils_functions import loadYamlConfig
+
 
 class InvalidTagException(Exception):
 	pass
@@ -46,12 +48,7 @@ class ExifTool():
 	                "Credit" : "xmp:Credit"
 	                }
 	def __loadConfig(self):
-		config_path = os.path.split(__file__)[0]
-		f = open(config_path + os.sep + 'exif_config.yml')
-		self.config = yaml.load(f)
-		f.close()
-		#print self.config
-		#self.pattern_exif = re.compile(self.config['standards'][0]['exif']['pattern'])
+		self.config = loadYamlConfig(__file__, "exif_config.yml")
 		self.standards = {}
 		for standard in self.config['standards']:
 			#print standard["name"]

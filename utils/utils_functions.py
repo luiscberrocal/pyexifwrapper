@@ -9,7 +9,7 @@ from files.filename_helpers import FilenameHelper
 def loadYamlConfig(src_filename, config_filename = None):
     cfg_filename = None
     if config_filename:
-        path = os.path.splitext(src_filename)[0]
+        path = os.path.split(src_filename)[0]
         cfg_filename = os.path.join(path, config_filename)
     else:
         cfg_filename = FilenameHelper.changeExtension(src_filename, ".yml")
