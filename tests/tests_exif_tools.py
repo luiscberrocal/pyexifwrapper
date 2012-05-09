@@ -71,6 +71,7 @@ class tests_exif_tools(unittest.TestCase):
 		print "**** %s ****" % method_name
 		fn = ur'V:\secure_dam\Fotografías\Ampliación_del_Canal\Período_de_ejecución\1\2007-01-19-005-NAY-024.jpg'
 		extool = ExifTool(fn, True)
+		print "Len exif %d" % (len(extool.standard_values['exif']))
     
 if __name__ == '__main__':
 	unittest.main()

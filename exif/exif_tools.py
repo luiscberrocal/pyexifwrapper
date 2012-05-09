@@ -71,13 +71,15 @@ class ExifTool():
 		self.standard_values = {}
 		for standard, pattern in self.standards.iteritems():
 			self.standard_values[standard]={}
-		command =	[self.exif_runtime, '-G', '-charset', self.config["exif"]["charset"], filename]
+		tfn = str(filename)
+		tfncp = tfn.encode('cp1252')
+		command =	[self.exif_runtime, '-G', '-charset', self.config["exif"]["charset"], tfncp]
 		p = subprocess.Popen(command , shell=self.config["exif"]["shell"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 		for line in p.stdout.readlines():
 			#print line.decode("utf-8").rstrip('\n')
 			for standard, pattern in self.standards.iteritems():
 				#self.standards[standards]["values"] = {}
-				match = pattern.match(line.decode("utf-8").rstrip('\n\r'))
+				match = pattern.match(line.rstrip('\n\r'))
 				if match:
 					self.standard_values[standard][match.group(1).replace(" ", "")] =  match.group(2)
 					break
