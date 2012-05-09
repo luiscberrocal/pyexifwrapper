@@ -189,7 +189,7 @@ class ExifTool():
 			else:
 				#print self.__iptc_to_pdf
 				raise InvalidTagException("The tag '%s' is not supported by __iptc_to_pdf. Value: %s " \
-										  % (k, jpgiptc.iptc[iptc_tag]))
+										  % (iptc_tag, jpgiptc.iptc[iptc_tag]))
 		if len(changes) > 1:
 			self.setAttributes(self.PDF, changes)
 		else:
@@ -260,7 +260,5 @@ class StandardTag():
 				break
 		return valid_standard	
 		
-	
-if __name__ == '__main__':
-	main()
+
 

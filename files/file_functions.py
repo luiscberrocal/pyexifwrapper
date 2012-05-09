@@ -20,4 +20,5 @@ def filecount(directory_name):
 	return len([f for f in os.listdir(directory_name) \
 		if os.path.isfile(os.path.join(directory_name,f)) and validateFile(directory_name, f)])
 
-
+#def copyToSize(source_folder, target_folder, limit):
+	
