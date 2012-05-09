@@ -10,6 +10,7 @@ Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 """
 
 import os, subprocess, re, datetime, yaml
+from platform import system
 
 class InvalidTagException(Exception):
 	pass
@@ -55,6 +56,10 @@ class ExifTool():
 		for standard in self.config['standards']:
 			#print standard["name"]
 			self.standards[standard["name"]] = re.compile(standard["pattern"])
+		if system() == "Windows":
+			self.exif_runtime = self.config["exif"]["application"]["Windows"]
+		elif system() == "Darwin":
+			self.exif_runtime = self.config["exif"]["application"]["Mac"]
 		#print "=== %s" % self.pattern_exif				
 	def __init__(self, filename, verbose = False):
 		self.__verbose = verbose
@@ -68,17 +73,17 @@ class ExifTool():
 		self.standard_values = {}
 		for standard, pattern in self.standards.iteritems():
 			self.standard_values[standard]={}
-		command =	[self.config["exif"]["application"], '-G', '-charset', self.config["exif"]["charset"], filename]
+		command =	[self.exif_runtime, '-G', '-charset', self.config["exif"]["charset"], filename]
 		p = subprocess.Popen(command , shell=self.config["exif"]["shell"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 		for line in p.stdout.readlines():
 			#print line.decode("utf-8").rstrip('\n')
 			for standard, pattern in self.standards.iteritems():
 				#self.standards[standards]["values"] = {}
-				match = pattern.match(line.decode("utf-8").rstrip('\n'))
+				match = pattern.match(line.decode("utf-8").rstrip('\n\r'))
 				if match:
 					self.standard_values[standard][match.group(1).replace(" ", "")] =  match.group(2)
 					break
-		retval = p.wait()
+		p.wait()
 	
 	def prettyPrint(self,*standards_to_print):
 		for standard, values in self.standard_values.iteritems():
@@ -117,7 +122,7 @@ class ExifTool():
 	def __setAtt(self, standardName, values, listAction ="replace"):
 		invalid_tag_pattern = re.compile('Warning:\sTag\s\'(.*)\'\sdoes\snot\sexist')
 		invalid_value_pattern = re.compile('Warning:\sInvalid\s(.*)')
-		keycommand = [self.config["exif"]["application"]]
+		keycommand = [self.exif_runtime]
 		
 		for k, v in values.iteritems():
 			if type(v) is list:

@@ -17,15 +17,15 @@ from files.filename_helpers import FilenameHelper
 def createCopy(fn, outputPath = None):
 	new_fn = FilenameHelper.addDateToFilename(fn)
 	if outputPath:
-		path, filename = os.path.split(new_fn)
+		filename = os.path.split(new_fn)[1]
 		new_fn = os.path.join(outputPath, filename)
 	shutil.copy2(fn, new_fn)
 	return new_fn
 
 class tests_exif_tools(unittest.TestCase):
 	def setUp(self):
-		self.fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
-		#self.fn =r'C:\Temp\python\iptcconvert\output\2006-05-19-035-NAY-143.jpg'
+		#self.fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
+		self.fn =r'C:\Temp\python\iptcconvert\output\2006-05-19-035-NAY-143.jpg'
 	def testPrettyPrint(self):
 		method_name = sys._getframe(0).f_code.co_name
 		print "**** %s ****" % method_name

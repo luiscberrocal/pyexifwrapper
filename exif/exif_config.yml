@@ -1,5 +1,7 @@
 exif:
-    application: /usr/bin/exiftool #C:\Temp\python\iptcconvert\libs\exiftool.exe
+    application:
+      Mac: /usr/bin/exiftool 
+      Windows: C:\Temp\python\iptcconvert\libs\exiftool.exe
     charset: utf-8
     shell: False
 standards:
