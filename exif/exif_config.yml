@@ -7,16 +7,16 @@ exif:
 standards:
     - 
         name: exif
-        pattern: '^\[EXIF\]\s*([\w\s-]*):\s(.*)'
+        pattern: '^\[EXIF\]\s*([\w\s\-/]*):\s(.*)'
     - 
         name: iptc
-        pattern: '^\[IPTC\]\s*([\w\s-]*):\s(.*)'
+        pattern: '^\[IPTC\]\s*([\w\s\-/]*):\s(.*)'
     - 
         name: xmp
-        pattern: '^\[XMP\]\s*([\w\s-]*):\s(.*)'
+        pattern: '^\[XMP\]\s*([\w\s\-/]*):\s(.*)'
     - 
         name: pdf
-        pattern: '^\[pdf\]\s*([\w\s-]*):\s(.*)'
+        pattern: '^\[pdf\]\s*([\w\s\-/]*):\s(.*)'
 iptc2pdf:
   Headline: Subject
   Keywords: Keywords

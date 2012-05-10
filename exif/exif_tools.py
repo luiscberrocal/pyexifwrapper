@@ -51,8 +51,11 @@ class ExifTool():
 		self.config = loadYamlConfig(__file__, "exif_config.yml")
 		self.standards = {}
 		for standard in self.config['standards']:
-			#print standard["name"]
-			self.standards[standard["name"]] = re.compile(standard["pattern"])
+			try:
+				self.standards[standard["name"]] = re.compile(standard["pattern"])
+			except Exception, e:
+				print "Could not compile re['%s'] = %s due to %s" % (standard["name"], standard["pattern"], str(e))
+				raise
 		if system() == "Windows":
 			self.exif_runtime = self.config["exif"]["application"]["Windows"]
 		elif system() == "Darwin":
@@ -81,8 +84,10 @@ class ExifTool():
 				#self.standards[standards]["values"] = {}
 				match = pattern.match(line.rstrip('\n\r'))
 				if match:
-					self.standard_values[standard][match.group(1).replace(" ", "")] =  match.group(2)
+					self.standard_values[standard][match.group(1).replace(" ", "").replace('/','')] =  match.group(2)
 					break
+			if self.__verbose:
+				print str(line.rstrip('\n\r'))
 		p.wait()
 	
 	def prettyPrint(self,*standards_to_print):

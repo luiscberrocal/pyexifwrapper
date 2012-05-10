@@ -70,8 +70,10 @@ class tests_exif_tools(unittest.TestCase):
 	def test_checkForDates(self):
 		method_name = sys._getframe(0).f_code.co_name
 		print "**** %s ****" % method_name
-		fn = ur'V:\secure_dam\Fotografías\Ampliación_del_Canal\Período_de_ejecución\1\2007-01-19-005-NAY-024.jpg'
-		extool = ExifTool(fn, True)
+		fn = ur'C:\Temp\python\iptcconvert\output\pdf_dates\2005-feb-08-Raúl Olmos.pdf'
+		print fn
+		extool = ExifTool(fn, False)
+		extool.prettyPrint()
 		print "Len exif %d" % (len(extool.standard_values['exif']))
     
 if __name__ == '__main__':
