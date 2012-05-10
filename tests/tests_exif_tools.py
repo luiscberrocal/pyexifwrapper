@@ -29,7 +29,8 @@ class tests_exif_tools(unittest.TestCase):
 	def setUp(self):
 		#self.fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
 		#self.fn =r'C:\Temp\python\iptcconvert\output\2006-05-19-035-NAY-143.jpg'
-		self.fn = ur'C:\Temp\python\2005-08-30-018-ADEG-199.jpg'
+		#self.fn = ur'C:\Temp\python\2005-08-30-018-ADEG-199.jpg'
+		self.fn = u'C:\\Users\\lberrocal\\git\\pyexifwrapper\\test_data\\IMG_2976.jpg'
 	def testPrettyPrint(self):
 		method_name = sys._getframe(0).f_code.co_name
 		print "**** %s ****" % method_name
@@ -63,9 +64,9 @@ class tests_exif_tools(unittest.TestCase):
 		#fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
 		extool = ExifTool(self.fn, False)
 		make = extool.getAttribute("exif:Make")
-		self.assertEquals(make, "NIKON CORPORATION")
+		self.assertEquals(make, "Canon")
 		flash = extool.getAttribute("Flash", "exif")
-		self.assertEquals(flash,"Auto, Fired, Return detected")
+		self.assertEquals(flash,"Off, Did not fire")
 	def test_checkForDates(self):
 		method_name = sys._getframe(0).f_code.co_name
 		print "**** %s ****" % method_name

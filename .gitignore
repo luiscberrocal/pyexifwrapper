@@ -1,5 +1,7 @@
 *.py[co]
-
+/test_data/*.jpg_original
+/test_data/IMG_3002_*.jpg
+/test_data/IMG_2976_*.jpg
 # Packages
 .DS_Store
 *.egg

@@ -17,5 +17,19 @@ standards:
     - 
         name: pdf
         pattern: '^\[pdf\]\s*([\w\s-]*):\s(.*)'
+iptc2pdf:
+  Headline: Subject
+  Keywords: Keywords
+  Caption-Abstract: Title
+  DateCreated: xmp:Event
+  ProgramVersion: null
+  OriginatingProgram: null
+  ApplicationRecordVersion: null
+  CopyrightNotice: xmp:Copyright
+  Source: xmp:Source
+  SpecialInstructions: xmp:Instructions
+  By-line: xmp:Creator
+  Credit: xmp:Credit
+  
     
     
