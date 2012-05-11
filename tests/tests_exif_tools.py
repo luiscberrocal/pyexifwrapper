@@ -13,17 +13,10 @@ from exif.exif_tools import *
 import sys, shutil, os
 
 from files.filename_helpers import FilenameHelper
-from utils.utils_functions import isWindows
+from utils.utils_functions import isWindows, backupFile
 
-def createCopy(fn, outputPath = None):
-	new_fn = FilenameHelper.addDateToFilename(fn)
-	if outputPath:
-		filename = os.path.split(new_fn)[1]
-		new_fn = os.path.join(outputPath, filename)
-	shutil.copy2(fn, new_fn)
-	if not os.path.exists(new_fn):
-		raise IOError("Could not copy file %s to %s" %( fn, new_fn))	
-	return new_fn
+
+
 
 class tests_exif_tools(unittest.TestCase):
 	def setUp(self):
@@ -48,7 +41,7 @@ class tests_exif_tools(unittest.TestCase):
 		method_name = sys._getframe(0).f_code.co_name
 		print "**** %s ****" % method_name		
 		#fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
-		nfn = createCopy(self.fn)
+		nfn = backupFile(self.fn)
 		extool = ExifTool(nfn, False)
 		title = u"XMP Title set on %s" % (datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
 		print nfn
@@ -70,11 +63,38 @@ class tests_exif_tools(unittest.TestCase):
 	def test_checkForDates(self):
 		method_name = sys._getframe(0).f_code.co_name
 		print "**** %s ****" % method_name
-		fn = ur'C:\Temp\python\iptcconvert\output\pdf_dates\2005-feb-08-Raúl Olmos.pdf'
-		print fn
+		fn = ur'C:\Temp\python\iptcconvert\output\pdf_dates\2005-feb-08-Raúl Olmos.pdf'		
 		extool = ExifTool(fn, False)
-		extool.prettyPrint()
-		print "Len exif %d" % (len(extool.standard_values['exif']))
+		print extool.filename
+		print "=" * len(extool.filename)
+		dates = extool.getDateAttributes()
+		for k, v in dates.iteritems():
+			print "%40s = %s" % (k, v)
+		
+		extool = ExifTool(self.fn, False)
+		print extool.filename
+		print "=" * len(extool.filename)
+		dates = extool.getDateAttributes()
+		for k, v in dates.iteritems():
+			print "%40s = %s" % (k, v)
+		fn =ur'\\pi-nas\SECUREDAM\CumulusFinal\Ambiente\2004-04-06-003-JMH-055.jpg'
+		extool = ExifTool(fn, False)
+		print extool.filename
+		print "=" * len(extool.filename)
+		dates = extool.getDateAttributes()
+		for k, v in dates.iteritems():
+			print "%40s = %s" % (k, v)
+	def test_WriteToXMP(self):
+		method_name = sys._getframe(0).f_code.co_name
+		print "**** %s ****" % method_name
+		fn = ur'C:\Temp\python\iptcconvert\output\pdf_dates\2005-feb-08-Raúl Olmos.pdf'
+		backup_folder = ur'C:\Temp\python\iptcconvert\output\pdf_dates'
+		backup_file = backupFile(fn, outputPath=backup_folder, overwrite=True)
+		print backup_file
+		ex = ExifTool(fn, False)
+		now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+		ex.setAttributes("xmp", {"DateTimeOriginal": now})
+		ex.prettyPrint()
     
 if __name__ == '__main__':
 	unittest.main()

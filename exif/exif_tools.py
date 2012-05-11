@@ -123,7 +123,9 @@ class ExifTool():
 			key =  '-%s:%s=%s' % (standard.lower(), tagname, value.rstrip('\n\r'))
 		#print "Key : " +  key
 		return key
-	
+	def __cleanLine(self, line):
+		return line.rstrip('\r\n')
+		
 	def __setAtt(self, standardName, values, listAction ="replace"):
 		invalid_tag_pattern = re.compile('Warning:\sTag\s\'(.*)\'\sdoes\snot\sexist')
 		invalid_value_pattern = re.compile('Warning:\sInvalid\s(.*)')
@@ -149,13 +151,14 @@ class ExifTool():
 							  stderr=subprocess.STDOUT)
 		lc = 1
 		for line in p.stdout.readlines():
-			invalid_tag_match = invalid_tag_pattern.match(line.rstrip('\n'))
-			invalid_value_match = invalid_value_pattern.match(line.rstrip('\n'))
+			cline = self.__cleanLine(line)
+			invalid_tag_match = invalid_tag_pattern.match(cline)
+			invalid_value_match = invalid_value_pattern.match(cline)
 			if invalid_tag_match:
 				raise InvalidTagException("Tag %s es Invalida para %s" % (invalid_tag_match.group(1), standardName.upper()))
 			if invalid_value_match:
 				raise InvalidValueException("Valor invalido %s"	 % invalid_value_match.group(0))
-			print "%d %s" % (lc, line)
+			print "%d %s" % (lc, cline)
 			lc += 1
 		if lc > 2:
 			raise Exception("More than one line on out for exittool for %s" % (self.filename))
@@ -172,7 +175,15 @@ class ExifTool():
 		if tag.standard_name in self.standard_values:
 			tatt= self.standard_values[tag.standard_name][tag.name]
 		return tatt
+	def getDateAttributes(self):
+		dates ={}
+		for standard_name in self.standard_values.iterkeys():
+			for key, value in self.standard_values[standard_name].iteritems():
+				if "date" in key.lower():
+					dates[standard_name +":" +  key] = value
+		return dates
 		
+			
 	def setAttributes(self, standardName, values ={}):
 		
 		if self.__isStandardNameValid(standardName):
