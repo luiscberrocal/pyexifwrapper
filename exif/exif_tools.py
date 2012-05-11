@@ -11,7 +11,7 @@ Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 
 import os, subprocess, re, datetime, yaml
 from platform import system
-from utils.utils_functions import loadYamlConfig
+from utils.utils_functions import loadYamlConfig, isWindows
 
 
 class InvalidTagException(Exception):
@@ -25,14 +25,6 @@ class UnsupportedStandardException(Exception):
 
 class ExifTool():
 	
-	#EXIT_TOOL = os.path.join(r"C:\Temp\python\iptcconvert\libs", "exiftool.exe")
-	#pattern_iptc = re.compile(r'^\[IPTC\]\s*([\w\s-]*):\s(.*)')
-	#pattern_xmp = re.compile(r'^\[XMP\]\s*([\w\s-]*):\s(.*)')
-	#attern_pdf = re.compile(r'^\[PDF\]\s*([\w\s-]*):\s(.*)')
-	#pattern_exif = re.compile(r'^\[EXIF\]\s*([\w\s-]*):\s(.*)')
-	IPTC = 0
-	XMP = 1
-	PDF = 2
 	__iptc_to_pdf = {"Headline" : "Subject",
 	                "Keywords" : "Keywords",
 	                "Writer-Editor" : "Author",
@@ -69,25 +61,29 @@ class ExifTool():
 		
 		self.__loadConfig()
 		self.__load(self.filename)
-	
+	def __encodeFilename(self, filename):
+		encoded_filename = filename
+		if isWindows():
+			strfn = str(filename)
+			encoded_filename = strfn.encode('cp1252')
+		return encoded_filename
 	def __load(self, filename):
 		self.standard_values = {}
 		for standard, pattern in self.standards.iteritems():
 			self.standard_values[standard]={}
-		tfn = str(filename)
-		tfncp = tfn.encode('cp1252')
-		command =	[self.exif_runtime, '-G', '-charset', self.config["exif"]["charset"], tfncp]
+		encoded_filename = self.__encodeFilename(filename)
+		command =	[self.exif_runtime, '-G', '-charset', self.config["exif"]["charset"], encoded_filename]
 		p = subprocess.Popen(command , shell=self.config["exif"]["shell"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 		for line in p.stdout.readlines():
 			#print line.decode("utf-8").rstrip('\n')
 			for standard, pattern in self.standards.iteritems():
-				#self.standards[standards]["values"] = {}
-				match = pattern.match(line.rstrip('\n\r'))
+				cline = self.__cleanLine(line)
+				match = pattern.match(cline)
 				if match:
 					self.standard_values[standard][match.group(1).replace(" ", "").replace('/','')] =  match.group(2)
 					break
 			if self.__verbose:
-				print str(line.rstrip('\n\r'))
+				print str(cline)
 		p.wait()
 	
 	def prettyPrint(self,*standards_to_print):
@@ -145,7 +141,8 @@ class ExifTool():
 				keycommand.append(key)
 		keycommand.append('-charset')
 		keycommand.append(self.config["exif"]["charset"])
-		keycommand.append(self.filename)
+		encoded_filename = self.__encodeFilename(self.filename)
+		keycommand.append(encoded_filename)
 		#print keycommand
 		p = subprocess.Popen( keycommand, shell=self.config["exif"]["shell"], stdout=subprocess.PIPE, \
 							  stderr=subprocess.STDOUT)
