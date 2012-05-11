@@ -83,7 +83,12 @@ class ExifTool():
 					self.standard_values[standard][match.group(1).replace(" ", "").replace('/','')] =  match.group(2)
 					break
 			if self.__verbose:
-				print str(cline)
+				if "[File]          File Name " in cline and isWindows():
+					print str(cline.decode('cp1252'))
+				elif "[File]          Directory" in cline and isWindows():
+					print str(cline.decode('cp1252'))
+				else:
+					print str(cline)
 		p.wait()
 	
 	def prettyPrint(self,*standards_to_print):
@@ -278,5 +283,11 @@ class StandardTag():
 				break
 		return valid_standard	
 		
-
-
+if __name__ == '__main__':
+	fn = ur'C:\Temp\python\iptcconvert\output\pdf_dates\2005-feb-08-Raúl Olmos.pdf'		
+	extool = ExifTool(fn, True)
+	print extool.filename
+	print "=" * len(extool.filename)
+	dates = extool.getDateAttributes()
+	for k, v in dates.iteritems():
+		print "%40s = %s" % (k, v)

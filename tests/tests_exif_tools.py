@@ -64,7 +64,7 @@ class tests_exif_tools(unittest.TestCase):
 		method_name = sys._getframe(0).f_code.co_name
 		print "**** %s ****" % method_name
 		fn = ur'C:\Temp\python\iptcconvert\output\pdf_dates\2005-feb-08-Raúl Olmos.pdf'		
-		extool = ExifTool(fn, False)
+		extool = ExifTool(fn, True)
 		print extool.filename
 		print "=" * len(extool.filename)
 		dates = extool.getDateAttributes()
