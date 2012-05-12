@@ -22,6 +22,9 @@ def loadYamlConfig(src_filename, config_filename = None):
 def isWindows():
     import platform
     return platform.system() == 'Windows'
+def isMac():
+    import platform
+    return platform.system() == 'Darwin'
 
 def backupFile(fn, outputPath = None, overwrite = False):
     new_fn = FilenameHelper.addDateToFilename(fn)

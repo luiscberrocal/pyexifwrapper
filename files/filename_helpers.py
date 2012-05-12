@@ -1,5 +1,5 @@
-# -*- coding: cp1252 -*-
-import fnmatch
+# -*- coding: utf-8 -*-
+
 import os, datetime, hashlib
 
 
@@ -16,7 +16,6 @@ class FilenameHelper:
         @staticmethod
         def addNumberToFilename(filename, number, new_ext = None):
                 path, ext = os.path.splitext(filename)
-                now = datetime.datetime.now()
                 if new_ext:
                         ext = new_ext
                 return "%s_%03d%s" % (path, number, ext)
@@ -46,31 +45,31 @@ class FilenameHelper:
             return os.path.join(path, basename + extension)
         @staticmethod
         def size(filename, output_unit = None):
-                units = [("KB", 1.0), ("MB", 2.0) , ("GB", 3.0), ("TB", 4.0)]
-                s = os.path.getsize(filename)
-                sr = 0.0
-                u = ""
-                if not output_unit is None:
-                        for unit in units:
-                                #print output_unit.upper(), unit
-                                if output_unit.upper() == unit[0]:
-                                        #print "** %s ** "  % unit[0]
-                                        sr = s / 1024.0**unit[1]
-                                        #print s
-                                        u = unit[0]
-                                        break
-                else:
-                        for unit in units:
-                                #print unit
-                                sr = s / 1024.0**unit[1]
-                                #print s
-                                u = unit[0]
-                                if sr < 1024.0:            
-                                        break
-                return sr, u
+            units = [("KB", 1.0), ("MB", 2.0) , ("GB", 3.0), ("TB", 4.0)]
+            s = os.path.getsize(filename)
+            sr = 0.0
+            u = ""
+            if not output_unit is None:
+                    for unit in units:
+                            #print output_unit.upper(), unit
+                            if output_unit.upper() == unit[0]:
+                                    #print "** %s ** "  % unit[0]
+                                    sr = s / 1024.0**unit[1]
+                                    #print s
+                                    u = unit[0]
+                                    break
+            else:
+                    for unit in units:
+                            #print unit
+                            sr = s / 1024.0**unit[1]
+                            #print s
+                            u = unit[0]
+                            if sr < 1024.0:            
+                                    break
+            return sr, u
 
 def filenameHelperTest():
-        fn = r'C:\Temp\python\iptcconvert\output\1996-DesignaciónAdministradorPCC.pdf'
+        fn = r'C:\Temp\python\iptcconvert\output\1996-Designaciï¿½nAdministradorPCC.pdf'
         ext = FilenameHelper.addDateToFilename(fn)
         print ext
         ext = FilenameHelper.addNumberToFilename(fn,2)

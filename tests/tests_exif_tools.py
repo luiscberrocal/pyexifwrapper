@@ -9,11 +9,10 @@ Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 """
 
 import unittest
-from exif.exif_tools import *
-import sys, shutil, os
-
-from files.filename_helpers import FilenameHelper
-from utils.utils_functions import isWindows, backupFile
+import sys
+from utils.utils_functions import backupFile
+from exif.exif_tools import ExifTool
+import datetime
 
 
 
@@ -95,6 +94,6 @@ class tests_exif_tools(unittest.TestCase):
 		now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 		ex.setAttributes("xmp", {"DateTimeOriginal": now})
 		ex.prettyPrint()
-    
+
 if __name__ == '__main__':
 	unittest.main()

@@ -1,0 +1,6 @@
+data_path:
+    windows: C:\Temp\python\iptcconvert\test_data
+    mac:     /Users/luiscberrocal/Documents/Python_Projects/pyexifwrapper/test_data
+files:
+    ferns: IMG_2976.jpg
+    toy:   IMG_3002.jpg
