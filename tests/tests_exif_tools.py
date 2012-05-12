@@ -13,23 +13,24 @@ import sys
 from utils.utils_functions import backupFile
 from exif.exif_tools import ExifTool
 import datetime
+from test_config import TestConfig
 
 
 
 
 class tests_exif_tools(unittest.TestCase):
+	data = TestConfig.getInstance().config
 	def setUp(self):
-		#self.fn =r"/Users/luiscberrocal/Pictures/IMG_3109.JPG"
-		#self.fn =r'C:\Temp\python\iptcconvert\output\2006-05-19-035-NAY-143.jpg'
-		#self.fn = ur'C:\Temp\python\2005-08-30-018-ADEG-199.jpg'
-		self.fn = u'C:\\Users\\lberrocal\\git\\pyexifwrapper\\test_data\\IMG_2976.jpg'
+		self.fn = self.data['ferns']
+		
 	def testPrettyPrint(self):
 		method_name = sys._getframe(0).f_code.co_name
 		print "**** %s ****" % method_name
-		
-		#fn = r'/Users/luiscberrocal/Documents/Luis Alberto La Batalla Final.mov'
-		extool = ExifTool(self.fn, False)
-		extool.prettyPrint()
+		for key, filename in self.data.iteritems():
+			print "%s: %s " %  (key, filename)
+			print "-" * len(filename)
+			extool = ExifTool(filename, False)
+			extool.prettyPrint()
 	def testConfig(self):
 		method_name = sys._getframe(0).f_code.co_name
 		print "**** %s ****" % method_name		
@@ -62,7 +63,7 @@ class tests_exif_tools(unittest.TestCase):
 	def test_checkForDates(self):
 		method_name = sys._getframe(0).f_code.co_name
 		print "**** %s ****" % method_name
-		fn = ur'C:\Temp\python\iptcconvert\output\pdf_dates\2005-feb-08-Raúl Olmos.pdf'		
+		fn  = self.data['ppt_pdf']
 		extool = ExifTool(fn, True)
 		print extool.filename
 		print "=" * len(extool.filename)
@@ -76,7 +77,7 @@ class tests_exif_tools(unittest.TestCase):
 		dates = extool.getDateAttributes()
 		for k, v in dates.iteritems():
 			print "%40s = %s" % (k, v)
-		fn =ur'\\pi-nas\SECUREDAM\CumulusFinal\Ambiente\2004-04-06-003-JMH-055.jpg'
+		fn = self.data['ferns']
 		extool = ExifTool(fn, False)
 		print extool.filename
 		print "=" * len(extool.filename)
@@ -86,8 +87,8 @@ class tests_exif_tools(unittest.TestCase):
 	def test_WriteToXMP(self):
 		method_name = sys._getframe(0).f_code.co_name
 		print "**** %s ****" % method_name
-		fn = ur'C:\Temp\python\iptcconvert\output\pdf_dates\2005-feb-08-Raúl Olmos.pdf'
-		backup_folder = ur'C:\Temp\python\iptcconvert\output\pdf_dates'
+		fn = self.data['ppt_pdf']
+		backup_folder = TestConfig.getInstance().output_path
 		backup_file = backupFile(fn, outputPath=backup_folder, overwrite=True)
 		print backup_file
 		ex = ExifTool(fn, False)

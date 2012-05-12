@@ -17,8 +17,10 @@ class TestConfig(object):
         rconfig = loadYamlConfig(__file__, 'test_data_config.yml')
         if isWindows():
             path = rconfig['data_path']['windows']
+            self.output_path = rconfig['output_path']['windows']
         elif isMac():
             path = rconfig['data_path']['mac']
+            self.output_path = rconfig['output_path']['mac']
         else:
             raise Exception('Unsupported Operating system for TestConfig')
         for name, fn in rconfig['files'].iteritems():

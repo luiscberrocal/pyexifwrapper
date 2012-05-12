@@ -1,6 +1,10 @@
 data_path:
     windows: C:\Temp\python\iptcconvert\test_data
     mac:     /Users/luiscberrocal/Documents/Python_Projects/pyexifwrapper/test_data
+output_path:
+    windows: C:\Temp\python\iptcconvert\output
+    mac:     /Users/luiscberrocal/Documents/Python_Projects/pyexifwrapper/output
 files:
-    ferns: IMG_2976.jpg
-    toy:   IMG_3002.jpg
+    ferns:   IMG_2976.jpg
+    toy:     IMG_3002.jpg
+    ppt_pdf: powerpoint_presentation.pdf
