@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 class AssetFolder(models.Model):
     path = models.CharField(max_length = 512)
+    asset_count = models.IntegerField()
     last_scanned = models.DateTimeField()
     
 class Asset(models.Model):

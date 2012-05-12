@@ -1,7 +1,11 @@
 *.py[co]
+.project
+.pydevproject
 /test_data/*.jpg_original
+/test_data/*.pdf_original
 /test_data/IMG_3002_*.jpg
 /test_data/IMG_2976_*.jpg
+/test_data/powerpoint_presentation_*.pdf
 # Packages
 .DS_Store
 *.egg
@@ -29,3 +33,5 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 /output
+/exif_wrapper.wpr
+/exif_wrapper.wpu
