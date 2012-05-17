@@ -7,6 +7,14 @@ import os, yaml, shutil
 from files.filename_helpers import FilenameHelper
 import datetime
 
+
+def shortenDisplay(stringval, maxlen = 80):
+    sval = stringval
+    if len(stringval) > maxlen:
+        ln = maxlen / 2 - 3
+        n = len(stringval) -ln
+        sval = stringval[:ln] + "..." + stringval[n:]
+    return sval
 def loadYamlConfig(src_filename, config_filename = None):
     cfg_filename = None
     if config_filename:

@@ -94,7 +94,23 @@ class tests_exif_tools(unittest.TestCase):
 		ex = ExifTool(fn, False)
 		now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 		ex.setAttributes("xmp", {"DateTimeOriginal": now})
-		ex.prettyPrint()
+		#ex.prettyPrint()
+		dates = ex.getDateAttributes()
+		for k, v in dates.iteritems():
+			print "%40s = %s" % (k, v)
+	def test_WriteToXMP_JPG(self):
+		method_name = sys._getframe(0).f_code.co_name
+		print "**** %s ****" % method_name
+		fn = self.data['ferns']
+		backup_folder = TestConfig.getInstance().output_path
+		backup_file = backupFile(fn, outputPath=backup_folder, overwrite=True)
+		print backup_file
+		ex = ExifTool(backup_file, False)
+		now = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+		ex.setAttributes("exif", {"DateTimeOriginal": now})
+		dates = ex.getDateAttributes()
+		for k, v in dates.iteritems():
+			print "%40s = %s" % (k, v)
 
 if __name__ == '__main__':
 	unittest.main()

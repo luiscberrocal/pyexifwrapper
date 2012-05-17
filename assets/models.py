@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 class AssetFolder(models.Model):
-    path = models.CharField(max_length = 512)
+    path = models.CharField(max_length = 512, unique = True)
     asset_count = models.IntegerField()
     last_scanned = models.DateTimeField()
     
